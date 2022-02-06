@@ -77,3 +77,6 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+
+# Hidden Android API.
+app/libs/android.jar

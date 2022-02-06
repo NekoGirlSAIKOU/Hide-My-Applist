@@ -24,7 +24,7 @@ object XposedUtils {
     @JvmStatic
     fun getServiceVersion(context: Context): Int {
         return try {
-            context.packageManager.getInstallerPackageName("checkHMAServiceVersion").toInt()
+            context.packageManager.getInstallerPackageName("checkHMAServiceVersion")?.toInt() ?:0
         } catch (e: IllegalArgumentException) {
             0
         }
@@ -33,7 +33,7 @@ object XposedUtils {
     @JvmStatic
     fun getServeTimes(context: Context): Int {
         return try {
-            context.packageManager.getInstallerPackageName("getServeTimes").toInt()
+            context.packageManager.getInstallerPackageName("getServeTimes")?.toInt() ?:0
         } catch (e: IllegalArgumentException) {
             0
         }

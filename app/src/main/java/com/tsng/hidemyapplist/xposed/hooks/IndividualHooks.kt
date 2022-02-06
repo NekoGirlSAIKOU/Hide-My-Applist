@@ -3,6 +3,7 @@ package com.tsng.hidemyapplist.xposed.hooks
 import android.app.Application
 import android.content.Context
 import com.tsng.hidemyapplist.BuildConfig
+import com.tsng.hidemyapplist.utils.isSystemApp
 import com.tsng.hidemyapplist.xposed.XposedEntry.Companion.modulePath
 import com.tsng.hidemyapplist.xposed.XposedUtils
 import com.tsng.hidemyapplist.xposed.XposedUtils.L
@@ -15,7 +16,7 @@ import kotlin.concurrent.thread
 
 class IndividualHooks : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpp: LoadPackageParam) {
-        if (lpp.appInfo == null || lpp.appInfo.isSystemApp) return
+        if (lpp.appInfo == null || lpp.appInfo.isSystemApp()) return
         XposedHelpers.findAndHookMethod(Application::class.java, "attach", Context::class.java, object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
                 val context = param.args[0] as Context
