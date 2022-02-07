@@ -14,6 +14,7 @@ import com.tsng.hidemyapplist.BuildConfig
 import com.tsng.hidemyapplist.TemplateConfig
 import com.tsng.hidemyapplist.XposedPreferenceProvider
 import com.tsng.hidemyapplist.utils.isSystemApp
+import com.tsng.hidemyapplist.xposed.XposedEntry
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedHelpers
@@ -73,9 +74,7 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
 
         @JvmStatic
         val systemContext: Context
-            get() {
-                return ActivityThread.currentActivityThread().systemContext
-            }
+            get()  = XposedEntry.systemContext
 
 
         /*Return true to hide it*/

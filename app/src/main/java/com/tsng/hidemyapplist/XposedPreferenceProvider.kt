@@ -61,9 +61,9 @@ class XposedPreferenceProvider :
             }
         }
 
-        // Can not read settings unless BuildConfig.APPLICATION_ID
+        // Can not read settings unless BuildConfig.APPLICATION_ID or android
         if (prefFileName == "Settings") {
-            if (callingPackageName != BuildConfig.APPLICATION_ID) {
+            if (callingPackageName != BuildConfig.APPLICATION_ID && callingPackageName != "android") {
                 Log.w(TAG, "$callingPackageName try to read settings")
                 return false
             }

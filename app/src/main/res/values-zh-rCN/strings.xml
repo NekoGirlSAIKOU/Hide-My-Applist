@@ -13,4 +13,6 @@
     <string name="error">错误</string>
     <string name="new_update">新版本可用：</string>
     <string name="update_logs">更新日志</string>
+    <string name="settings_enable_system_service">开启系统服务</string>
+    <string name="settings_enable_system_service_summary">开启系统服务可以提供更高的效率和可靠性，但是也可能会导致系统出错从而开不了机。更改这个设置后必须重启系统才能生效。关闭的话如果不想重启请手动点击下面的终止系统服务。</string>
 </resources>

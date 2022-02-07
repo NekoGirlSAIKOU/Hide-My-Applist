@@ -20,6 +20,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_service">
+        <SwitchPreference
+            android:key="EnableSystemService"
+            android:summary="@string/settings_enable_system_service_summary"
+            android:title="@string/settings_enable_system_service"
+            />
         <Preference
             android:icon="@drawable/ic_stop"
             android:key="StopSystemService"

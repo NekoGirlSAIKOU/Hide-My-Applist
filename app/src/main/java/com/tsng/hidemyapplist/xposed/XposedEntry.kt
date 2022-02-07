@@ -1,5 +1,9 @@
 package com.tsng.hidemyapplist.xposed
 
+import android.app.ActivityThread
+import android.content.Context
+import com.crossbowffs.remotepreferences.RemotePreferences
+import com.tsng.hidemyapplist.XposedPreferenceProvider
 import com.tsng.hidemyapplist.xposed.XposedUtils.APPNAME
 import com.tsng.hidemyapplist.xposed.hooks.EnhancedIndividualHooks
 import com.tsng.hidemyapplist.xposed.hooks.IndividualHooks
@@ -13,6 +17,12 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 class XposedEntry : IXposedHookLoadPackage, IXposedHookZygoteInit {
     companion object {
         lateinit var modulePath: String
+
+        @JvmStatic
+        val systemContext: Context
+            get() {
+                return ActivityThread.currentActivityThread().systemContext
+            }
     }
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
@@ -28,7 +38,18 @@ class XposedEntry : IXposedHookLoadPackage, IXposedHookZygoteInit {
             })
         }
         if (lpp.packageName == "android"){
-            PackageManagerService().handleLoadPackage(lpp)
+            try {
+                val remotePref = RemotePreferences(
+                    systemContext,
+                    XposedPreferenceProvider.AUTHORITY,
+                    "Settings"
+                )
+                if(remotePref.getBoolean("EnableSystemService",false)){
+                    PackageManagerService().handleLoadPackage(lpp) // Hook system
+                }
+            } catch (ignored:Throwable){
+
+            }
         } else {
             //IndividualHooks().handleLoadPackage(lpp)
             EnhancedIndividualHooks().handleLoadPackage(lpp)
