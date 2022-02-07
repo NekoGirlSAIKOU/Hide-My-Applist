@@ -110,7 +110,7 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
 
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
-        if (lpparam?.appInfo == null || lpparam.appInfo.isSystemApp()) return
+        if (hookedPackageName != null || lpparam?.appInfo == null || lpparam.appInfo.isSystemApp()) return
         Log.d(TAG,"handleLoadPackage: ${lpparam.packageName}")
         if (lpparam.packageName == BuildConfig.APPLICATION_ID) {
             if (shouldHookSelf) {
@@ -121,12 +121,11 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
             }
         }
         hookedPackageName = lpparam.packageName
+        if(templateConfig == null){
+            return  // This app is not in list.
+        }
 
         prefScope.registerOnSharedPreferenceChangeListener(this)
-
-        if(templateConfig == null){
-            Log.e(TAG,"templateConfig == null")
-        }
 
         if (templateConfig?.enableAllHooks == true){
             Log.d(TAG,"Enable all hooks")
