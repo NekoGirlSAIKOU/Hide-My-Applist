@@ -25,9 +25,7 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
     companion object {
         private const val TAG = "EnhancedIndividualHooks"
         private val shouldHookSelf by lazy {
-            // todo: fix recurrence while hooking self
-            // prefSettings.getBoolean("HookSelf", false)
-            false
+            prefSettings.getBoolean("HookSelf", false)
         }
 
         @JvmStatic
@@ -48,11 +46,10 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
                         val templateName = prefScope.getString(it, null)
                         if (templateName != null) {
                             field = RemotePreferences(
-                                systemContext,
-                                XposedPreferenceProvider.AUTHORITY,
-                                "tpl_$templateName"
+                                    systemContext,
+                                    XposedPreferenceProvider.AUTHORITY,
+                                    "tpl_$templateName"
                             )
-
                             Log.d(TAG,"templateFileName is tpl_$templateName")
                         }
                     }
@@ -111,7 +108,8 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         if (hookedPackageName != null || lpparam?.appInfo == null || lpparam.appInfo.isSystemApp()) return
-        Log.d(TAG,"handleLoadPackage: ${lpparam.packageName}")
+        hookedPackageName = lpparam.packageName
+        Log.d(TAG,"handleLoadPackage: $hookedPackageName")
         if (lpparam.packageName == BuildConfig.APPLICATION_ID) {
             if (shouldHookSelf) {
                 Log.d(TAG,"Hook self")
@@ -120,7 +118,6 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.
                 return
             }
         }
-        hookedPackageName = lpparam.packageName
         if(templateConfig == null){
             return  // This app is not in list.
         }
