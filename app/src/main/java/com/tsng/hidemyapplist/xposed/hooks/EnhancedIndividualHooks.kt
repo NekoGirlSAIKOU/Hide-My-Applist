@@ -20,7 +20,7 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 
-class EnhancedIndividualHooks : EnhancedIndividualHooksJava() {
+class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         private const val TAG = "EnhancedIndividualHooks"
         private val shouldHookSelf by lazy {
@@ -123,6 +123,8 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava() {
         }
         hookedPackageName = lpparam.packageName
 
+        prefScope.registerOnSharedPreferenceChangeListener(this)
+
         if(templateConfig == null){
             Log.e(TAG,"templateConfig == null")
         }
@@ -169,6 +171,17 @@ class EnhancedIndividualHooks : EnhancedIndividualHooksJava() {
             shellDetectionsHook(lpparam)
         }
         Log.d(TAG,"All hook is done.")
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        Log.d(TAG,"onSharedPreferenceChanged")
+        if (sharedPreferences == prefScope){
+            if (key == hookedPackageName){
+                Log.d(TAG,"Refresh prefRequiredTemplate and templateConfig")
+                prefRequiredTemplate = null // Refresh prefRequiredTemplate
+                templateConfig = null // Refresh templateConfig
+            }
+        }
     }
 }
 
