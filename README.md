@@ -3,7 +3,10 @@
 [![Download](https://img.shields.io/github/v/release/Dr-TSNG/Hide-My-Applist?label=Download)](https://github.com/Dr-TSNG/Hide-My-Applist/releases/latest)
 [![Chat](https://img.shields.io/badge/Telegram-Chat-blue.svg?logo=telegram)](https://t.me/HideMyApplist)
 [![License](https://img.shields.io/github/license/Dr-TSNG/Hide-My-Applist?label=License)](https://choosealicense.com/licenses/gpl-3.0/)
-## About this module  
+
+在原版的基础上做了很多修改以满足自己的需要，纯自用。
+
+## About this module
 Although "It is incorrect to detect specific app's installation", yet not every app using root provides random packagename support.
 In this case, detected apps that use root (such as Fake Location and Storage Isolation) is equal to detected root itself.  
 At the same time, some "smart" apps use various loopholes to acquire your applist, so that it can draw a persona for you.  
