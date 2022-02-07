@@ -1,8 +1,5 @@
 # Hide My Applist
-[![Stars](https://img.shields.io/github/stars/Dr-TSNG/Hide-My-Applist?label=Stars)](https://github.com/Dr-TSNG)
-[![Download](https://img.shields.io/github/v/release/Dr-TSNG/Hide-My-Applist?label=Download)](https://github.com/Dr-TSNG/Hide-My-Applist/releases/latest)
-[![Chat](https://img.shields.io/badge/Telegram-Chat-blue.svg?logo=telegram)](https://t.me/HideMyApplist)
-[![License](https://img.shields.io/github/license/Dr-TSNG/Hide-My-Applist?label=License)](https://choosealicense.com/licenses/gpl-3.0/)
+[![License](https://img.shields.io/github/license/NekoGirlSAIKOU/Hide-My-Applist?label=License)](https://choosealicense.com/licenses/gpl-3.0/)
 
 在原版的基础上做了很多修改以满足自己的需要，纯自用。
 
