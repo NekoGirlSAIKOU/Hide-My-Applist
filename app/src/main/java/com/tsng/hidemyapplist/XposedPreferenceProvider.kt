@@ -7,9 +7,10 @@ import com.crossbowffs.remotepreferences.RemotePreferenceFile
 import com.crossbowffs.remotepreferences.RemotePreferenceProvider
 
 class XposedPreferenceProvider :
-    RemotePreferenceProvider(AUTHORITY, arrayOf("Scope", "Settings")) {
+    RemotePreferenceProvider(AUTHORITY, DEFAULT_PREF_FILE_NAMEs) {
     companion object {
         private const val TAG = "XposedPreferenceProvider"
+        private val DEFAULT_PREF_FILE_NAMEs = arrayOf("Scope", "Settings")
         const val AUTHORITY = "com.tsng.hidemyapplist.preferences"
     }
 
@@ -26,8 +27,8 @@ class XposedPreferenceProvider :
         val mPrefFilesField = RemotePreferenceProvider::class.java.getDeclaredField("mPrefFiles")
         mPrefFilesField.isAccessible = true
 
-        val prefNames = ArrayList<String>(templates.size + 2)
-        prefNames.addAll(arrayOf("Scope", "Settings"))
+        val prefNames = ArrayList<String>(templates.size + DEFAULT_PREF_FILE_NAMEs.size)
+        prefNames.addAll(DEFAULT_PREF_FILE_NAMEs)
         for (template in templates) {
             Log.d(TAG, "onCreate: Add tpl_$template")
             prefNames.add("tpl_$template")
