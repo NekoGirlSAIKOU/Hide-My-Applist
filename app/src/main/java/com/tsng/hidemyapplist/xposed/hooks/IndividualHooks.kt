@@ -92,7 +92,14 @@ class IndividualHooks : IXposedHookLoadPackage {
                 WhiteList =  it.whiteList,
                 EnableAllHooks = it.enableAllHooks,
                 ExcludeSystemApps = it.excludeSystemApps,
-                HideApps = it.hideApps
+                HideApps = HashSet(it.hideApps).apply {
+                    if (it.whiteList){
+                        add(EnhancedIndividualHooks.hookedPackageName)  // Don't hide self.
+                        add("com.mali.testjava")    // This may cause crash if hides its path.
+                    } else {
+                        remove(EnhancedIndividualHooks.hookedPackageName)  // Don't hide self.
+                    }
+                }
             )
         }
     }

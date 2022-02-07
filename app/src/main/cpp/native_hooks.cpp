@@ -98,8 +98,8 @@ int fake_stat(const char *path, struct stat *buf) {
 
 int (*orig_open)(const char *path, int flags, ...);
 int fake_open(const char *path, int flags, ...) {
-    if (false && isUseHook("File detections") && isHideFile(path)) {
-        // Seems this will cause crash
+    if (isUseHook("File detections") && isHideFile(path)) {
+        // This may cause crash. Seems it has been fixed.
         std::stringstream message;
         message << "@Hide nativeOpen caller: " << callerName << " param: " << path;
         li(message.str());
