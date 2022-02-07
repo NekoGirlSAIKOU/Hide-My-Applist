@@ -24,7 +24,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 class EnhancedIndividualHooks : EnhancedIndividualHooksJava(),SharedPreferences.OnSharedPreferenceChangeListener {
     companion object {
         private const val TAG = "EnhancedIndividualHooks"
-        private val shouldHookSelf by lazy {
+        public val shouldHookSelf by lazy {
             prefSettings.getBoolean("HookSelf", false)
         }
 

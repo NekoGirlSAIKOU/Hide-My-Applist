@@ -8,7 +8,7 @@ import com.tsng.hidemyapplist.utils.isSystemApp
 import com.tsng.hidemyapplist.xposed.hooks.EnhancedIndividualHooks
 import java.io.File
 
-class TemplateConfig(private val templatePref: SharedPreferences) {
+class TemplateConfig(val templatePref: SharedPreferences) {
     companion object{
         private const val TAG = "TemplateConfig"
     }

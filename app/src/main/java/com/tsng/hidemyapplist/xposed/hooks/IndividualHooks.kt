@@ -2,7 +2,12 @@ package com.tsng.hidemyapplist.xposed.hooks
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.tsng.hidemyapplist.BuildConfig
+import com.tsng.hidemyapplist.CJsonConfig
+import com.tsng.hidemyapplist.JsonConfig
 import com.tsng.hidemyapplist.utils.isSystemApp
 import com.tsng.hidemyapplist.xposed.XposedEntry.Companion.modulePath
 import com.tsng.hidemyapplist.xposed.XposedUtils
@@ -15,6 +20,10 @@ import java.io.File
 import kotlin.concurrent.thread
 
 class IndividualHooks : IXposedHookLoadPackage {
+    companion object{
+        private const val TAG = "IndividualHooks"
+    }
+
     override fun handleLoadPackage(lpp: LoadPackageParam) {
         if (lpp.appInfo == null || lpp.appInfo.isSystemApp()) return
         XposedHelpers.findAndHookMethod(Application::class.java, "attach", Context::class.java, object : XC_MethodHook() {
@@ -51,7 +60,7 @@ class IndividualHooks : IXposedHookLoadPackage {
         initNative(pkgName)
         thread {
             while (true) {
-                val json = XposedUtils.getServicePreference(context)
+                val json = getJson()?.toString()
                 if (json != null) {
                     var last = "/"
                     val messages = nativeBridge(json)
@@ -62,9 +71,9 @@ class IndividualHooks : IXposedHookLoadPackage {
                             "INFO" -> last = "i"
                             "ERROR" -> last = "e"
                             else -> when (last) {
-                                "d" -> L.nd(str, context = context)
-                                "i" -> L.ni(str, context = context)
-                                "e" -> L.ne(str, context = context)
+                                "d" -> Log.d(TAG,str)
+                                "i" -> Log.i(TAG,str)
+                                "e" -> Log.e(TAG,str)
                             }
                         }
                     }
@@ -76,4 +85,15 @@ class IndividualHooks : IXposedHookLoadPackage {
 
     private external fun initNative(pkgName: String)
     private external fun nativeBridge(json: String) : Array<String>
+
+    fun getJson(): CJsonConfig? {
+        return EnhancedIndividualHooks.templateConfig?.let {
+            CJsonConfig(
+                WhiteList =  it.whiteList,
+                EnableAllHooks = it.enableAllHooks,
+                ExcludeSystemApps = it.excludeSystemApps,
+                HideApps = it.hideApps
+            )
+        }
+    }
 }

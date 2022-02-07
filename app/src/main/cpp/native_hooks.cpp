@@ -16,36 +16,19 @@ using std::string;
 constexpr char APPNAME[] = "com.tsng.hidemyapplist";
 
 struct Config {
-    struct Template {
-        bool WhiteList = false;
-        bool EnableAllHooks = false;
-        std::vector<string> HideApps;
-        std::vector<string> ApplyHooks;
-    };
-
-    bool HookSelf = false;
-    bool DetailLog = false;
-    std::map<string, string> Scope;
-    std::map<string, Template> Templates;
+    bool WhiteList = false;
+    bool EnableAllHooks = false;
+    bool ExcludeSystemApps = false;
+    std::vector<string> HideApps;
 } config;
-
-template<>
-struct jsonxx::json_bind<Config::Template> {
-    static void from_json(const json &j, Config::Template &v) {
-        jsonxx::from_json(j["EnableAllHooks"], v.EnableAllHooks);
-        jsonxx::from_json(j["HideApps"], v.HideApps);
-        jsonxx::from_json(j["ApplyHooks"], v.ApplyHooks);
-        jsonxx::from_json(j["WhiteList"], v.WhiteList);
-    }
-};
 
 template<>
 struct jsonxx::json_bind<Config> {
     static void from_json(const json &j, Config &v) {
-        jsonxx::from_json(j["HookSelf"], v.HookSelf);
-        jsonxx::from_json(j["DetailLog"], v.DetailLog);
-        jsonxx::from_json(j["Scope"], v.Scope);
-        jsonxx::from_json(j["Templates"], v.Templates);
+        jsonxx::from_json(j["EnableAllHooks"], v.EnableAllHooks);
+        jsonxx::from_json(j["HideApps"], v.HideApps);
+        jsonxx::from_json(j["ExcludeSystemApps"], v.ExcludeSystemApps);
+        jsonxx::from_json(j["WhiteList"], v.WhiteList);
     }
 };
 
@@ -71,21 +54,13 @@ inline void le(const string &s) {
 }
 
 bool isUseHook(const string &hookMethod) {
-    if (strcmp(callerName, APPNAME) == 0 && !config.HookSelf) return false;
-    if (!config.Scope.count(callerName)) return false;
-    const auto &tplName = config.Scope[callerName];
-    if (!config.Templates.count(tplName)) return false;
-    const auto &tpl = config.Templates[tplName];
-    return tpl.EnableAllHooks | std::find(tpl.ApplyHooks.begin(), tpl.ApplyHooks.end(), hookMethod) != tpl.ApplyHooks.end();
+    return true;
 }
 
 bool isHideFile(const char *path) {
     if (callerName == nullptr || path == nullptr) return false;
     if (strstr(path, callerName) != nullptr) return false;
-    if (!config.Scope.count(callerName)) return false;
-    const auto &tplName = config.Scope[callerName];
-    if (!config.Templates.count(tplName)) return false;
-    const auto &tpl = config.Templates[tplName];
+    const auto &tpl = config;
     if (std::regex_search(path, std::regex("/storage/emulated/(.*)/Android/")) ||
         strstr(path, "/sdcard/Android/") != nullptr ||
         strstr(path, "/data/data/") != nullptr ||
@@ -123,7 +98,8 @@ int fake_stat(const char *path, struct stat *buf) {
 
 int (*orig_open)(const char *path, int flags, ...);
 int fake_open(const char *path, int flags, ...) {
-    if (isUseHook("File detections") && isHideFile(path)) {
+    if (false && isUseHook("File detections") && isHideFile(path)) {
+        // Seems this will cause crash
         std::stringstream message;
         message << "@Hide nativeOpen caller: " << callerName << " param: " << path;
         li(message.str());
