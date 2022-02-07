@@ -12,15 +12,6 @@ class XposedPreferenceProvider :
         private const val TAG = "XposedPreferenceProvider"
         const val AUTHORITY = "com.tsng.hidemyapplist.preferences"
     }
-    private val callingPackageName:String?
-    get() {
-        return try {
-            super.getCallingPackage()
-        } catch (e:SecurityException){
-            val callingUid = Binder.getCallingUid()
-            context?.packageManager?.getNameForUid(callingUid)
-        }
-    }
 
     private val scopePref by lazy {
         context!!.getSharedPreferences("Scope", Context.MODE_PRIVATE)
@@ -48,6 +39,13 @@ class XposedPreferenceProvider :
     }
 
     override fun checkAccess(prefFileName: String?, prefKey: String?, write: Boolean): Boolean {
+        val callingPackageName = try {
+            super.getCallingPackage()
+        } catch (e:SecurityException){
+            val callingUid = Binder.getCallingUid()
+            context?.packageManager?.getNameForUid(callingUid)
+        }
+
         // No write
         if (write) {
             Log.w(TAG, "$callingPackageName try to write to file $prefFileName key $prefKey")
