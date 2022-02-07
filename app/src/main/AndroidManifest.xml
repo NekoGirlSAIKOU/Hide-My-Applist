@@ -79,6 +79,11 @@
             </intent-filter>
         </activity-alias>
 
+        <provider
+            android:name=".XposedPreferenceProvider"
+            android:authorities="com.tsng.hidemyapplist.preferences"
+            android:exported="true"/>
+
         <meta-data
             android:name="xposedmodule"
             android:value="true" />

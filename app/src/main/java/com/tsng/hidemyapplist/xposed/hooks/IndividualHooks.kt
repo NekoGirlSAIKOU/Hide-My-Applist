@@ -37,11 +37,12 @@ class IndividualHooks : IXposedHookLoadPackage {
     fun fileHook(context: Context, pkgName: String) {
         XposedHelpers.findAndHookConstructor(File::class.java, String::class.java, object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
-                if (XposedUtils.callServiceIsUseHook(context, pkgName, "File detections"))
-                    if (XposedUtils.callServiceIsToHide(context, pkgName, param.args[0] as String?, true)) {
+                if (EnhancedIndividualHooks.templateConfig?.applyHooks?.fileDetections == true){
+                    if (EnhancedIndividualHooks.templateConfig?.isToHideFile(pkgName,param.args[0] as String) == true){
                         L.i("@Hide javaFile caller: $pkgName param: ${param.args[0]}", context = context)
                         param.args[0] = "fuck/there/is/no/file"
                     }
+                }
             }
         })
     }

@@ -1,6 +1,7 @@
 package com.tsng.hidemyapplist.xposed
 
 import com.tsng.hidemyapplist.xposed.XposedUtils.APPNAME
+import com.tsng.hidemyapplist.xposed.hooks.EnhancedIndividualHooks
 import com.tsng.hidemyapplist.xposed.hooks.IndividualHooks
 import com.tsng.hidemyapplist.xposed.hooks.PackageManagerService
 import de.robv.android.xposed.IXposedHookLoadPackage
@@ -26,9 +27,12 @@ class XposedEntry : IXposedHookLoadPackage, IXposedHookZygoteInit {
                 }
             })
         }
-        if (lpp.packageName == "android")
+        if (lpp.packageName == "android"){
             PackageManagerService().handleLoadPackage(lpp)
-        else
-            IndividualHooks().handleLoadPackage(lpp)
+        } else {
+            //IndividualHooks().handleLoadPackage(lpp)
+            EnhancedIndividualHooks().handleLoadPackage(lpp)
+        }
+
     }
 }
