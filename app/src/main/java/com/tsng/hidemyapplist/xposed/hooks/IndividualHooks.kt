@@ -59,8 +59,11 @@ class IndividualHooks : IXposedHookLoadPackage {
     fun nativeHook(context: Context, pkgName: String) {
         initNative(pkgName)
         thread {
+            var json = getJson()?.toString()
             while (true) {
-                val json = getJson()?.toString()
+                if (json == null){
+                    json = getJson()?.toString()
+                }
                 if (json != null) {
                     var last = "/"
                     val messages = nativeBridge(json)
