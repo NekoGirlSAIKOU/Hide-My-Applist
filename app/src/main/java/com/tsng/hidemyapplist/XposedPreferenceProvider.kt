@@ -44,7 +44,13 @@ class XposedPreferenceProvider :
             super.getCallingPackage()
         } catch (e:SecurityException){
             val callingUid = Binder.getCallingUid()
-            context?.packageManager?.getNameForUid(callingUid)
+            context?.packageManager?.getNameForUid(callingUid)?.let {
+                if (it.contains(':')){
+                    it.substring(0,it.indexOf(':'))
+                } else {
+                    it
+                }
+            }
         }
 
         // No write
